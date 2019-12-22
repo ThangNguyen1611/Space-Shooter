@@ -20,30 +20,38 @@ namespace PROJECT_SpaceShooter
     {
         public Cursor cursor;
         public float bulletdelay;
+        public float gravityradius;
         public SpawnCircle spawncircle;
         public List<HeroLife> herolife = new List<HeroLife>();
-        public bool isRespawning;
         public float currentmana, maxmana;
         public bool triggeredSwift;
         public float timeSwift;
         public Basic2d swiftaura;
-
-        //*
-        SpriteFont mousestr;
-
+        public float critchance;
+        public Basic2d nuclearbomb;
+        public float UnrealAttack;  //Fake dmg của Fireball
+        public bool triggergotohell;
+        public float timedeadeffect;
+        public float spawndelay;
+        
         public Hero(string PATH, Vector2 POS, Vector2 DIMS) : base(PATH, POS, DIMS)
         {
             isdead = false;
-            speed = 15.0f; //7.5f
-            bulletdelay = 1; //delay ban đầu thôi
+            speed = 5.0f; //5f
+            hitdist = 35;
+            gravityradius = 200;
+            bulletdelay = 1;
             currenthealth = 100;
             maxhealth = currenthealth;
             currentmana = 100;
             maxmana = currentmana;
             life = 3;
-            isRespawning = false;
             triggeredSwift = false;
+            triggergotohell = false;
             timeSwift = 100;
+            timedeadeffect = 30;
+            spawndelay = 100;
+            critchance = 10;
             
             cursor = new Cursor("crosshair_red_large", new Vector2(2000 - Global.screenwidth / 2, 2000 - Global.screenheight / 2), new Vector2(30, 30));
             spawncircle = new SpawnCircle("SpawnCircle", new Vector2(0, 0), new Vector2(120, 100));
@@ -51,16 +59,16 @@ namespace PROJECT_SpaceShooter
             herolife.Add(new HeroLife("Heart", new Vector2(0, 0), new Vector2(50, 50)));
             herolife.Add(new HeroLife("Heart", new Vector2(0, 0), new Vector2(50, 50)));
             swiftaura = new Basic2d("SwiftAura", new Vector2(0, 0), new Vector2(100, 100));
-            //*
-            mousestr = Global.content.Load<SpriteFont>("mousestr");
+            nuclearbomb = new Basic2d("NuclearBomb", new Vector2(0, 0), new Vector2(75, 75));
+            
         }
         
-        public override void Update()
+        public override void Update(Vector2 OFFSET)
         {
             KeyboardState keystate = Keyboard.GetState();
             MouseState mousestate = Mouse.GetState();
-
-            if (keystate.IsKeyDown(Keys.A))
+            #region Hero Movement & Skill
+            if ((keystate.IsKeyDown(Keys.A) || keystate.IsKeyDown(Keys.Left)) && !isdead && !triggergotohell && isstunned == false)
             {
                 if (GameGlobal.herotouchscreen(this))
                 {
@@ -69,13 +77,11 @@ namespace PROJECT_SpaceShooter
                 }
                 else
                 {
-                    Dead();
-                    Respawn();
+                    if (life > 0)
+                        triggergotohell = true;
                 }
-                if (OutOfSaver())
-                    isRespawning = false;
             }
-            if (keystate.IsKeyDown(Keys.D))
+            if ((keystate.IsKeyDown(Keys.D) || keystate.IsKeyDown(Keys.Right)) && !isdead && !triggergotohell && isstunned == false)
             {
                 if (GameGlobal.herotouchscreen(this))
                 {
@@ -84,13 +90,11 @@ namespace PROJECT_SpaceShooter
                 }
                 else
                 {
-                    Dead();
-                    Respawn();
+                    if (life > 0)
+                        triggergotohell = true;
                 }
-                if (OutOfSaver())
-                    isRespawning = false;
             }
-            if (keystate.IsKeyDown(Keys.W))
+            if ((keystate.IsKeyDown(Keys.W) || keystate.IsKeyDown(Keys.Up)) && !isdead && !triggergotohell && isstunned == false)
             {
                 if (GameGlobal.herotouchscreen(this))
                 {
@@ -99,13 +103,11 @@ namespace PROJECT_SpaceShooter
                 }
                 else
                 {
-                    Dead();
-                    Respawn();
+                    if (life > 0)
+                        triggergotohell = true;
                 }
-                if (OutOfSaver())
-                    isRespawning = false;
             }
-            if (keystate.IsKeyDown(Keys.S))
+            if ((keystate.IsKeyDown(Keys.S) || keystate.IsKeyDown(Keys.Down)) && !isdead && !triggergotohell && isstunned == false)
             {
                 if (GameGlobal.herotouchscreen(this))
                 {
@@ -114,107 +116,135 @@ namespace PROJECT_SpaceShooter
                 }
                 else
                 {
-                    Dead();
-                    Respawn();
+                    if (life > 0)
+                        triggergotohell = true;
                 }
-                if (OutOfSaver())
-                    isRespawning = false;
 
             }
-            if (keystate.IsKeyDown(Keys.Space))
+            if (keystate.IsKeyDown(Keys.Space) && !isdead && !triggergotohell && isstunned == false)
             {
                 Swift();
-                if (OutOfSaver())
-                    isRespawning = false;
             }
             if (triggeredSwift)
             {
                 SwiftEffect();
-                timeSwift -= 3.5f;
+                timeSwift -= 2.5f;
                 if (timeSwift <= 0)
                 {
                     triggeredSwift = false;
-                    speed /= 2.5f;
+                    //  /=2 
+                    if (GameGlobal.gametimepassed < 2000)
+                        speed = 5;
+                    if (2000 <= GameGlobal.gametimepassed && GameGlobal.gametimepassed < 7500)
+                        speed = 6;
+                    if (7500 <= GameGlobal.gametimepassed)
+                        speed = 8;
                 }
             }
+            if (keystate.IsKeyDown(Keys.F))
+            {
+                GameGlobal.triggerNuclear();
+            }
+            #endregion
+            if (keystate.IsKeyDown(Keys.L))
+                currenthealth = 100;
 
             rot = Global.RotateTowards(pos, new Vector2(mousestate.X + cursor.pos.X, mousestate.Y + cursor.pos.Y));
 
             if (mousestate.LeftButton == ButtonState.Pressed)
             {
-                if(isdead == false)
-                    GameGlobal.passprojectile(new Fireball(new Vector2(pos.X, pos.Y), this.pos, new Vector2(mousestate.X + cursor.pos.X, mousestate.Y + cursor.pos.Y)));               
+                if (isdead == false)
+                {
+                    if (!IsCrit(critchance))
+                    {
+                        if (GameGlobal.triggerboostatkspeed)
+                        {
+                            MultiBullet();
+                        }
+                        else
+                            GameGlobal.PassProjectiles(new Fireball(pos, new Vector2(35, 35), false, this.pos, new Vector2(mousestate.X + cursor.pos.X, mousestate.Y + cursor.pos.Y)));
+                    }
+                    else
+                    {
+                        GameGlobal.PassProjectiles(new Fireball(pos, new Vector2(105, 105), true, this.pos, new Vector2(mousestate.X + cursor.pos.X, mousestate.Y + cursor.pos.Y)));
+                    }
+                }
             }
 
-            base.Update();
+            #region Buff
+            TriggerHealing();
+            TriggerExtraHealth();
+            TriggerExtraCrit();
+            TriggerExtraLife();
+            UnrealAttack = 35 + GameGlobal.extradamage;
+            #endregion
+
+            if (IsDeadYet(currenthealth))
+            {
+                if (life > 0)
+                    triggergotohell = true;
+            }
+            if (DeadEffect())
+            {
+                Dead();
+                Respawn();
+            }
+
+            if (2000 == GameGlobal.gametimepassed)
+                speed = 6;
+            if (7500 == GameGlobal.gametimepassed)
+                speed = 8;
+
+            base.Update(OFFSET);
+        }
+        
+        public bool DeadEffect()
+        {
+            if (triggergotohell)
+            {
+                if (timedeadeffect > 0)
+                {
+                    myModel = Global.content.Load<Texture2D>("DeadEffect");
+                    dims = new Vector2(50, 50);
+                    timedeadeffect--;
+                }
+                if (timedeadeffect == 0)
+                {
+                    timedeadeffect = 30;
+                    myModel = Global.content.Load<Texture2D>("Ship");
+                    dims = new Vector2(28, 44);
+                    triggergotohell = false;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool IsCrit(float CRITCHANCE)
+        {
+            Random rand = new Random();
+            if (rand.Next(100) <= CRITCHANCE)
+                return true;
+            else
+                return false;
+        }
+        
+        public void UseMana(float USED)
+        {
+            currentmana -= USED;
         }
 
         public void Swift()
         {
             if (currentmana >= 90)
             {
+                Global.soundcontrol.PLaySound("SkillSwiftSound");
                 triggeredSwift = true;
                 UseMana(90f);
-                #region code bị khóa
-                //if (flagdirection == 'a')
-                //    if (GameGlobal.herotouchscreen(this))
-                //    {
-                //        pos = new Vector2(pos.X - 3f * speed, pos.Y);
-                //        cursor.pos = new Vector2(cursor.pos.X - 3f * speed, cursor.pos.Y);
-                //    }
-                //    else
-                //    {
-                //        Dead();
-                //        Respawn();
-                //    }
-                //if (flagdirection == 'd')
-                //    if (GameGlobal.herotouchscreen(this))
-                //    {
-                //        pos = new Vector2(pos.X + 3f * speed, pos.Y);
-                //        cursor.pos = new Vector2(cursor.pos.X + 3f * speed, cursor.pos.Y);
-                //    }
-                //    else
-                //    {
-                //        Dead();
-                //        Respawn();
-                //    }
-                //if (flagdirection == 'w')
-                //    if (GameGlobal.herotouchscreen(this))
-                //    {
-                //        pos = new Vector2(pos.X, pos.Y - 3f * speed);
-                //        cursor.pos = new Vector2(cursor.pos.X, cursor.pos.Y - 3f * speed);
-                //    }
-                //    else
-                //    {
-                //        Dead();
-                //        Respawn();
-                //    }
-                //if (flagdirection == 's')
-                //    if (GameGlobal.herotouchscreen(this))
-                //    {
-                //        pos = new Vector2(pos.X, pos.Y + 3f * speed);
-                //        cursor.pos = new Vector2(cursor.pos.X, cursor.pos.Y + 3f * speed);
-                //    }
-                //    else
-                //    {
-                //        Dead();
-                //        Respawn();
-                //    }
-                #endregion
-                speed *= 2.5f;
+                speed *= 2f;
                 timeSwift = 100;
-                //Vì sao kh dùng code bị khóa ?
-                //Code bị khóa áp dụng cho kiểu: currentmana >= 10 và usemana(10) -> Bấm space nhiều lần để gia tăng từng đoạn ngắn / mana ít hay nhiều đều dùng đc
-                //Code không bị khóa tối ưu hơn: usemana(90) -> 90 mana mới đc dùng 1 lần
-                //Chỉ tăng speed lên -> người chơi tự do điều khiển hướng chứ không bị gò bó bởi hướng trước khi nhấn Space như code bị khóa
-                //Dùng triggeredSwift dễ kiểm soát khi nào đang dùng skill hơn -> Dễ chỉnh hiệu ứng bóng mờ
             }
         }       
-
-        public void UseMana(float USED)
-        {
-            currentmana -= USED;
-        }
 
         public void SwiftEffect()
         {
@@ -227,32 +257,84 @@ namespace PROJECT_SpaceShooter
             }
         }
 
-        public void Dead()
+        public void MultiBullet()
         {
-            life -= 1;
-            if (life <= 0)
-                isdead = true;
-        }                   //Mỗi khi chết 1 lần
+            MouseState mousestate = Mouse.GetState();
+
+            GameGlobal.PassProjectiles(new Fireball(new Vector2(pos.X, pos.Y), new Vector2(35, 35), false, this.pos, new Vector2(mousestate.X + cursor.pos.X, mousestate.Y + cursor.pos.Y)));
+            GameGlobal.PassProjectiles(new Fireball(new Vector2(pos.X, pos.Y), new Vector2(35, 35), false, this.pos, new Vector2(mousestate.X + cursor.pos.X + 50, mousestate.Y + cursor.pos.Y + 50)));
+            GameGlobal.PassProjectiles(new Fireball(new Vector2(pos.X, pos.Y), new Vector2(35, 35), false, this.pos, new Vector2(mousestate.X + cursor.pos.X - 50, mousestate.Y + cursor.pos.Y - 50)));
+        }
 
         public void Respawn()
         {
+            if (life == 0)
+                Global.soundcontrol.PLaySound("GameOver");
             if (life > 0)
             {
-                isRespawning = true;
-                currenthealth = 100;
-                currentmana = 100;
+                Global.soundcontrol.PLaySound("Respawn");
+                GameGlobal.invincibletimer = 300;
+                GameGlobal.triggerinvinsible = true;
+                GameGlobal.triggerboostatkspeed = false;
+                GameGlobal.boostatkspeedtimer = 1500;
+                this.color = Color.White;
+                isstunned = false;
+                currenthealth = maxhealth;
+                currentmana = maxmana;
+                speed = 5;
+                if (2000 < GameGlobal.gametimepassed)
+                    speed = 6f;
+                if (7500 < GameGlobal.gametimepassed)
+                    speed = 8f;
+                triggeredSwift = false;
+                timeSwift = 100;
                 pos = new Vector2(2000, 2000);
                 cursor.pos = new Vector2(2000 - Global.screenwidth / 2, 2000 - Global.screenheight / 2);
             }
         }               //Khi còn life thì sẽ Respawn ở giữa màn hình
-
-        public bool OutOfSaver()
+        
+        public void TriggerHealing()
         {
-            if (isRespawning && (pos.X > 2500 || pos.X < 1500 || pos.Y > 2500 || pos.Y < 1500)) //Biến isrespawning quyết định hàm chỉ đc gọi ra khi vừa chết
-                return true;
-            return false;
-        }           //1 vùng an toàn khi hồi sinh
+            if (GameGlobal.triggerhealing)
+            {
+                if (currenthealth <= (maxhealth - 50))
+                    currenthealth += 50;
+                else
+                    currenthealth = maxhealth;
+                GameGlobal.triggerhealing = false;
+            }
+        }
 
+        public void TriggerExtraHealth()
+        {
+            if (GameGlobal.triggerextrahealth)
+            {
+                maxhealth += 10;
+                currenthealth += 10;
+                GameGlobal.triggerextrahealth = false;
+            }
+        }
+
+        public void TriggerExtraCrit()
+        {
+            if (GameGlobal.triggerextracrit)
+            {
+                if(critchance <= 40)        //max critchance = 50
+                    critchance += 10;
+                GameGlobal.triggerextracrit = false;
+            }
+        }
+
+        public void TriggerExtraLife()
+        {
+            if (GameGlobal.triggerextralife)
+            {
+                if(life < 3)
+                    life += 1;
+                GameGlobal.triggerextralife = false;
+            }
+        }
+        
         public override void Draw(Vector2 OFFSET)
         {
             if (!isdead)    //nếu chưa chết hẳn
@@ -262,16 +344,14 @@ namespace PROJECT_SpaceShooter
                 base.Draw(OFFSET);
                 cursor.Draw(new Vector2(Global.mouse.newMousePos.X, Global.mouse.newMousePos.Y), new Vector2(25, 25));
             }
-            if (isRespawning && !isdead)    //nếu đang hồi sinh và chưa chết hẳn
+            if (GameGlobal.triggerinvinsible && !isdead)  
                 spawncircle.Draw(new Vector2(this.pos.X, this.pos.Y));
             for (int i = 0; i < life; i++)  //quản lí số mạng
             {
                 herolife[i].Draw(new Vector2(this.pos.X - 600 + i * 50, this.pos.Y - 260));
             }
-
-            //test
-            Global.spriteBatch.DrawString(mousestr, cursor.pos.X.ToString(), new Vector2(this.pos.X + 50, this.pos.Y + 100), Color.Yellow);
-            Global.spriteBatch.DrawString(mousestr, cursor.pos.Y.ToString(), new Vector2(this.pos.X + 50, this.pos.Y + 120), Color.Yellow);
+            if (GameGlobal.obtainnuclearbomb)
+                nuclearbomb.Draw(new Vector2(this.pos.X - 400, this.pos.Y - 245));
         }
     }
 }

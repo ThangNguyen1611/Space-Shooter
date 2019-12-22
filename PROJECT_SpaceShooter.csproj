@@ -54,12 +54,26 @@
     <Compile Include="Sources\Engine\Output\SoundControl.cs" />
     <Compile Include="Sources\Engine\Output\Sounds.cs" />
     <Compile Include="Sources\Gameplay\Cursor.cs" />
+    <Compile Include="Sources\Gameplay\EXPLOSIVE.cs" />
     <Compile Include="Sources\Gameplay\HeroLife.cs" />
     <Compile Include="Sources\Gameplay\SpawnCircle.cs" />
     <Compile Include="Sources\Gameplay\World.cs" />
     <Compile Include="Sources\Gameplay\World\Backgrounds.cs" />
     <Compile Include="Sources\Gameplay\Projectile2d.cs" />
-    <Compile Include="Sources\Gameplay\World\Fireball.cs" />
+    <Compile Include="Sources\Gameplay\World\Boss.cs" />
+    <Compile Include="Sources\Gameplay\World\Bosses\Blitz.cs" />
+    <Compile Include="Sources\Gameplay\World\Bosses\Cable.cs" />
+    <Compile Include="Sources\Gameplay\World\Bosses\Fatboiz.cs" />
+    <Compile Include="Sources\Gameplay\World\Projectiles\BlitzHands.cs" />
+    <Compile Include="Sources\Gameplay\World\Projectiles\FatboizProjectiles.cs" />
+    <Compile Include="Sources\Gameplay\World\Projectiles\Fireball.cs" />
+    <Compile Include="Sources\Gameplay\World\Mob.cs" />
+    <Compile Include="Sources\Gameplay\World\Mobs\Elector.cs" />
+    <Compile Include="Sources\Gameplay\World\Mobs\Gunner.cs" />
+    <Compile Include="Sources\Gameplay\World\Mobs\Imp.cs" />
+    <Compile Include="Sources\Gameplay\World\MysteryItem.cs" />
+    <Compile Include="Sources\Gameplay\World\Projectiles\GunnerProjectiles.cs" />
+    <Compile Include="Sources\Gameplay\World\SpawnPoint.cs" />
     <Compile Include="Sources\Gameplay\World\Unit.cs" />
     <Compile Include="Sources\Gameplay\World\Hero.cs" />
   </ItemGroup>

@@ -20,6 +20,7 @@ namespace PROJECT_SpaceShooter
     {
         public float rot;
         public Vector2 pos, dims;
+        public Color color;
 
         public Texture2D myModel;
 
@@ -27,11 +28,12 @@ namespace PROJECT_SpaceShooter
         {
             pos = POS;      //positon
             dims = DIMS;    //dimenson
+            color = Color.White;
             
             myModel = Global.content.Load<Texture2D>(PATH);
         }
 
-        public virtual void Update()
+        public virtual void Update(Vector2 OFFSET)
         {
 
         }
@@ -40,7 +42,7 @@ namespace PROJECT_SpaceShooter
         {
             if (myModel != null)
             {
-                Global.spriteBatch.Draw(myModel, new Rectangle((int)(pos.X), (int)(pos.Y), (int)dims.X, (int)dims.Y), Color.White);
+                Global.spriteBatch.Draw(myModel, new Rectangle((int)(pos.X), (int)(pos.Y), (int)dims.X, (int)dims.Y), color);
             }
         }                                       //Không rot, kh offset, kh origin
 
@@ -48,7 +50,7 @@ namespace PROJECT_SpaceShooter
         {
             if(myModel != null)
             {
-                Global.spriteBatch.Draw(myModel, new Rectangle((int)(pos.X + OFFSET.X), (int)(pos.Y + OFFSET.Y), (int)dims.X, (int)dims.Y), null, Color.White, rot, new Vector2(myModel.Bounds.Width / 2, myModel.Bounds.Height / 2), new SpriteEffects(), 0);
+                Global.spriteBatch.Draw(myModel, new Rectangle((int)(pos.X + OFFSET.X), (int)(pos.Y + OFFSET.Y), (int)dims.X, (int)dims.Y), null, color, rot, new Vector2(myModel.Bounds.Width / 2, myModel.Bounds.Height / 2), new SpriteEffects(), 0);
             }
         }                         //Offset chỉnh vị trí khởi tạo củam hình
         
@@ -56,16 +58,9 @@ namespace PROJECT_SpaceShooter
         {
             if (myModel != null)
             {
-                Global.spriteBatch.Draw(myModel, new Rectangle((int)(pos.X + OFFSET.X), (int)(pos.Y + OFFSET.Y), (int)dims.X, (int)dims.Y), null, Color.White, 0, new Vector2(ORIGIN.X, ORIGIN.Y), new SpriteEffects(), 0);
+                Global.spriteBatch.Draw(myModel, new Rectangle((int)(pos.X + OFFSET.X), (int)(pos.Y + OFFSET.Y), (int)dims.X, (int)dims.Y), null, color, 0, new Vector2(ORIGIN.X, ORIGIN.Y), new SpriteEffects(), 0);
             }
         }         //Origin chỉnh xoay tại điểm nào của hình
-
-        public virtual void Draw(Vector2 OFFSET, Vector2 ORIGIN, Color COLOR)
-        {
-            if (myModel != null)
-            {
-                Global.spriteBatch.Draw(myModel, new Rectangle((int)(pos.X + OFFSET.X), (int)(pos.Y + OFFSET.Y), (int)dims.X, (int)dims.Y), null, COLOR, 0, new Vector2(ORIGIN.X, ORIGIN.Y), new SpriteEffects(), 0);
-            }
-        }   //Color chỉnh màu 
+        
     }
 }

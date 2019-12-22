@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Administrator/Desktop/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/Background.jpg</SourceFile>
-  <SourceTime>2019-11-24T22:20:12.155891+07:00</SourceTime>
+  <SourceFile>C:/Users/Administrator/Desktop/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/Background.png</SourceFile>
+  <SourceTime>2019-12-08T22:58:41.5310741+07:00</SourceTime>
   <DestFile>C:/Users/Administrator/Desktop/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/bin/Windows/Content/Background.xnb</DestFile>
-  <DestTime>2019-11-24T22:27:38.297514+07:00</DestTime>
+  <DestTime>2019-12-08T23:06:34.5732168+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T23:35:54+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

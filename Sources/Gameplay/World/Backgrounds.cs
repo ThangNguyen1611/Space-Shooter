@@ -23,9 +23,9 @@ namespace PROJECT_SpaceShooter
             //GameGlobal.cursortouchscreen = CursorTouchScreen;
         }
 
-        public override void Update()
+        public override void Update(Vector2 OFFSET)
         {
-            base.Update();
+            base.Update(OFFSET);
         }
 
         public override void Draw()          //Không override lại Draw(offset) vì background kh xoay

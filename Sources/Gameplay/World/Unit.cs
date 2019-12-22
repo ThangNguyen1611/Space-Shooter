@@ -20,35 +20,52 @@ namespace PROJECT_SpaceShooter
     {
         public bool isdead;
 
-        public float speed , currenthealth, maxhealth;
+        public float speed, hitdist, currenthealth, maxhealth;
+
         public int life;
+
+
+        public bool isstunned;
 
         public Unit(string PATH, Vector2 POS, Vector2 DIMS) : base(PATH, POS, DIMS)
         {
             isdead = false;
-            speed = .1f;
+            hitdist = 35.0f;
+            speed = 1f;
             life = 1;
 
             currenthealth = 1;
             maxhealth = currenthealth;
+
+            isstunned = false;
         }
 
         public virtual void GetHit(float DMG)
         {
-            currenthealth -= DMG;
-            IsWeDeadYet(currenthealth);
+            if (currenthealth >= DMG)
+                currenthealth -= DMG;
+            else
+                currenthealth = 0;
         }
 
-        public virtual bool IsWeDeadYet(float OURHEALTH)    //Chỉ hỏi chứ kh quyết định chết thật hay kh
+        public virtual bool IsDeadYet(float HEALTH)    //Chỉ hỏi chứ kh quyết định chết thật hay kh
         {
-            if(OURHEALTH <= 0)
+            if(HEALTH < 1)
                 return true;
             return false;
         }
 
-        public override void Update()
+        public virtual void Dead()
         {
-            base.Update();
+            life -= 1;
+            if (life <= 0)
+                isdead = true;
+        }                   //Mỗi khi chết 1 lần
+
+        public override void Update(Vector2 OFFSET)
+        {
+
+            base.Update(OFFSET);
         }
 
         public override void Draw(Vector2 OFFSET)

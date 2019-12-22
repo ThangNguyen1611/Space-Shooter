@@ -32,7 +32,7 @@ namespace PROJECT_SpaceShooter
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-
+            
             graphics.HardwareModeSwitch = false;
         }
 
@@ -51,7 +51,7 @@ namespace PROJECT_SpaceShooter
             graphics.PreferredBackBufferWidth = Global.screenwidth;
             graphics.PreferredBackBufferHeight = Global.screenheight;
 
-            graphics.IsFullScreen = true;
+            //graphics.IsFullScreen = true;
 
             graphics.ApplyChanges();
 
@@ -79,7 +79,14 @@ namespace PROJECT_SpaceShooter
             world = new World();
 
             Global.soundcontrol = new SoundControl("StarWarMainMusic");
+            Global.soundcontrol.AddSound("Respawn", "GameStart", 1f);
             Global.soundcontrol.AddSound("Shooting", "Shoot1", .1f);
+            Global.soundcontrol.AddSound("SkillSwiftSound", "Swift", 1f);
+            Global.soundcontrol.AddSound("BulletHit", "BulletCollision", 1f);
+            Global.soundcontrol.AddSound("HitImp", "HitImp", 1f);
+            Global.soundcontrol.AddSound("TriggerBuff", "TriggerBuff", .5f);
+            Global.soundcontrol.AddSound("FREEZE", "Freeze", 1f);
+            Global.soundcontrol.AddSound("GameOver", "GameOver", 1f);
 
         }
 

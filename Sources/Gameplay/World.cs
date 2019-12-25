@@ -47,7 +47,7 @@ namespace PROJECT_SpaceShooter
 
         public int iceworldtimer;
         public int lbltrigger;
-        
+
         public long timescore;
 
 
@@ -110,7 +110,7 @@ namespace PROJECT_SpaceShooter
 
             iceworldtimer = 300;
             lbltrigger = 50;
-            
+
             timescore = 0;
 
 
@@ -139,7 +139,7 @@ namespace PROJECT_SpaceShooter
                     if (Ship.currenthealth <= Ship.maxhealth)
                         Ship.GetHit(-0.005f);    //0.005f
                     if (Ship.currentmana <= Ship.maxmana)
-                        Ship.UseMana(-0.25f); //0.25f 
+                        Ship.UseMana(-0.25f); //0.25f
                 }
                 healthbar.Update(Ship.currenthealth, Ship.maxhealth);
                 manabar.Update(Ship.currentmana, Ship.maxmana);
@@ -192,7 +192,7 @@ namespace PROJECT_SpaceShooter
                         SpawnFatboiz();
                     else if (GameGlobal.gametimepassed == 6000)
                         SpawnBlitz();
-                    else if (GameGlobal.gametimepassed == 500)
+                    else if (GameGlobal.gametimepassed == 9000)
                         SpawnCable();
                     else
                     {   //sau khi spawn đủ 3 con thì sẽ spawn ngẫu nhiên
@@ -375,7 +375,7 @@ namespace PROJECT_SpaceShooter
 
 
 
-           
+
         }
 
         public virtual void AddMob(object INFO)
@@ -565,7 +565,7 @@ namespace PROJECT_SpaceShooter
             }
             if (mobgunner.bulletdelay == 0)
             {
-                mobgunner.bulletdelay = 40; 
+                mobgunner.bulletdelay = 40;
             }
         }
 
@@ -635,7 +635,7 @@ namespace PROJECT_SpaceShooter
             }
         }
 
-        public void TriggerInvincible() 
+        public void TriggerInvincible()
         {
             if (GameGlobal.triggerinvinsible)
             {
@@ -696,7 +696,7 @@ namespace PROJECT_SpaceShooter
 
             if (delayspawnboss <= 299 && delayspawnboss >= 10)
                 Global.spriteBatch.DrawString(Global.gamefont, "            WARNING     \n Get Out Of The Center" , new Vector2(Ship.pos.X - 250, Ship.pos.Y - 250), Color.Red, 0, new Vector2(0, 0), 3.2f, new SpriteEffects(), 0);
-            
+
             if (orbspawn)
             {
                 Random rand = new Random();
@@ -711,7 +711,7 @@ namespace PROJECT_SpaceShooter
                 healthbar.Draw(new Vector2(Ship.pos.X + (Ship.dims.X / 2) - Global.screenwidth / 2 + 50, Ship.pos.Y + (Ship.dims.Y / 2) - Global.screenheight / 2 + 20));
                 manabar.Draw(new Vector2(Ship.pos.X + (Ship.dims.X / 2) - Global.screenwidth / 2 + 50, Ship.pos.Y + (Ship.dims.Y / 2) - Global.screenheight / 2 + 55));
             }
-            
+
             #region Draw Loops
             for (int i = 0; i < orbs.Count; i++)
             {
@@ -762,7 +762,7 @@ namespace PROJECT_SpaceShooter
                 {
                 }
                 if (bosses[0].currenthealth > 0)
-                    bosshealthbar.Draw(new Vector2(Ship.pos.X + (Ship.dims.X / 2) - Global.screenwidth / 2 + 300, Ship.pos.Y + (Ship.dims.Y / 2) - Global.screenheight / 2 + 680));               
+                    bosshealthbar.Draw(new Vector2(Ship.pos.X + (Ship.dims.X / 2) - Global.screenwidth / 2 + 300, Ship.pos.Y + (Ship.dims.Y / 2) - Global.screenheight / 2 + 680));
             }
             #endregion
 
@@ -774,7 +774,7 @@ namespace PROJECT_SpaceShooter
             Global.spriteBatch.DrawString(Global.gamefont, "Speed: " + Ship.speed.ToString(), new Vector2(Ship.pos.X - 620, Ship.pos.Y - 235), Color.CadetBlue);
             Global.spriteBatch.DrawString(Global.gamefont, "Attack: " + Ship.UnrealAttack.ToString(), new Vector2(Ship.pos.X - 620, Ship.pos.Y - 215), Color.CadetBlue);
             Global.spriteBatch.DrawString(Global.gamefont, "Crit Chance: " + Ship.critchance.ToString(), new Vector2(Ship.pos.X - 620, Ship.pos.Y - 195), Color.CadetBlue);
-            
+
             if (GameGlobal.whattrigger != "")
             {
                 Global.spriteBatch.DrawString(Global.gamefont, GameGlobal.whattrigger, new Vector2(Ship.pos.X - 50, Ship.pos.Y - 100), Color.White);

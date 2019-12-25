@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.902
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PROJECT_SpaceShooter", "PROJECT_SpaceShooter\PROJECT_SpaceShooter.csproj", "{A2B9F21C-2648-4B07-8EDA-8F5E331E580C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PROJECT_SpaceShooter", "PROJECT_SpaceShooter.csproj", "{A2B9F21C-2648-4B07-8EDA-8F5E331E580C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

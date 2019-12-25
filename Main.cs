@@ -195,8 +195,8 @@ namespace PROJECT_SpaceShooter
                     case GameState.Playing:
                         {
                             Global.soundcontrol.bgmusic.instance.Play();
-                            graphics.IsFullScreen = true;
-                            graphics.ApplyChanges();
+                            //graphics.IsFullScreen = true;
+                            //graphics.ApplyChanges();
 
                             IsMouseVisible = false;
                             Global.gametime = gameTime;

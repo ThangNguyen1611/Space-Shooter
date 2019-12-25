@@ -20,7 +20,7 @@ namespace PROJECT_SpaceShooter
     {
 
 
-        public GunnerProjectiles(Vector2 POS, Vector2 DIMS, bool ISCRITDMG, Vector2 OWNERPOS, Vector2 TARGET) : base("Fireball", POS, DIMS, ISCRITDMG, OWNERPOS, TARGET)
+        public GunnerProjectiles(Vector2 POS, Vector2 DIMS, bool ISCRITDMG, Vector2 OWNERPOS, Vector2 TARGET) : base("GunnerProjectile", POS, DIMS, ISCRITDMG, OWNERPOS, TARGET)
         {
             speed = 10;
             damage = 35;

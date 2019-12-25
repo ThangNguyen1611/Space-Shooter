@@ -47,7 +47,7 @@ namespace PROJECT_SpaceShooter
                 pos += Global.RadialMovement(HERO.pos, pos, speed);
             if (Global.GetDistance(HERO.pos, pos) < hitdist)
             {
-                Global.soundcontrol.PLaySound("HitImp");
+                Global.soundcontrol.PLaySound("MobHit");
                 if (candamage)
                 {
                     HERO.GetHit(bossdmg);

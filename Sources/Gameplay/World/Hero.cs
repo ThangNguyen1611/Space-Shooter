@@ -146,9 +146,7 @@ namespace PROJECT_SpaceShooter
                 GameGlobal.triggerNuclear();
             }
             #endregion
-            if (keystate.IsKeyDown(Keys.L))
-                currenthealth = 100;
-
+            
             rot = Global.RotateTowards(pos, new Vector2(mousestate.X + cursor.pos.X, mousestate.Y + cursor.pos.Y));
 
             if (mousestate.LeftButton == ButtonState.Pressed)
@@ -166,7 +164,7 @@ namespace PROJECT_SpaceShooter
                     }
                     else
                     {
-                        GameGlobal.PassProjectiles(new Fireball(pos, new Vector2(105, 105), true, this.pos, new Vector2(mousestate.X + cursor.pos.X, mousestate.Y + cursor.pos.Y)));
+                        GameGlobal.PassProjectiles(new Fireball(pos, new Vector2(70, 70), true, this.pos, new Vector2(mousestate.X + cursor.pos.X, mousestate.Y + cursor.pos.Y)));
                     }
                 }
             }
@@ -202,6 +200,9 @@ namespace PROJECT_SpaceShooter
         {
             if (triggergotohell)
             {
+                if (timedeadeffect == 25)
+                    Global.soundcontrol.PLaySound("DeadSound");
+
                 if (timedeadeffect > 0)
                 {
                     myModel = Global.content.Load<Texture2D>("DeadEffect");
@@ -260,10 +261,10 @@ namespace PROJECT_SpaceShooter
         public void MultiBullet()
         {
             MouseState mousestate = Mouse.GetState();
-
             GameGlobal.PassProjectiles(new Fireball(new Vector2(pos.X, pos.Y), new Vector2(35, 35), false, this.pos, new Vector2(mousestate.X + cursor.pos.X, mousestate.Y + cursor.pos.Y)));
             GameGlobal.PassProjectiles(new Fireball(new Vector2(pos.X, pos.Y), new Vector2(35, 35), false, this.pos, new Vector2(mousestate.X + cursor.pos.X + 50, mousestate.Y + cursor.pos.Y + 50)));
             GameGlobal.PassProjectiles(new Fireball(new Vector2(pos.X, pos.Y), new Vector2(35, 35), false, this.pos, new Vector2(mousestate.X + cursor.pos.X - 50, mousestate.Y + cursor.pos.Y - 50)));
+
         }
 
         public void Respawn()
@@ -272,6 +273,7 @@ namespace PROJECT_SpaceShooter
                 Global.soundcontrol.PLaySound("GameOver");
             if (life > 0)
             {
+
                 Global.soundcontrol.PLaySound("Respawn");
                 GameGlobal.invincibletimer = 300;
                 GameGlobal.triggerinvinsible = true;

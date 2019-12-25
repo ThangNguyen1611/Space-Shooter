@@ -105,6 +105,7 @@ namespace PROJECT_SpaceShooter
             {
                 GameGlobal.whattrigger = "___MAKE IT BURN___";
                 GameGlobal.triggerboostatkspeed = true;
+                GameGlobal.boostatkspeedtimer = 1500;
             }
         }
 

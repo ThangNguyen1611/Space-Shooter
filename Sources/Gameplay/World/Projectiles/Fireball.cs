@@ -24,6 +24,8 @@ namespace PROJECT_SpaceShooter
         {
             speed = 35;
             damage = 35 + GameGlobal.extradamage;
+            if (ISCRITDMG)
+                myModel = Global.content.Load<Texture2D>("FireballCrit");
         }
 
         public override void Update(Vector2 OFFSET, List<Unit> UNITS, List<Boss> BOSS)

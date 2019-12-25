@@ -19,7 +19,7 @@ namespace PROJECT_SpaceShooter
     {
         public float handdelay;
 
-        public Blitz(Vector2 POS) : base("Elector", POS, new Vector2(500, 500))
+        public Blitz(Vector2 POS) : base("Blitz", POS, new Vector2(500, 500))
         {
             bossname = "blitz";
             speed = 1f;

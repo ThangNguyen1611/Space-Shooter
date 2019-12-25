@@ -20,7 +20,7 @@ namespace PROJECT_SpaceShooter
         public float bulletdelay;
         public float sodiersspawndelay;
 
-        public Fatboiz(Vector2 POS) : base("Gunner", POS, new Vector2(500, 500))
+        public Fatboiz(Vector2 POS) : base("Fatboiz", POS, new Vector2(500, 500))
         {
             bossname = "fatboiz";
             speed = 3.5f;
@@ -49,10 +49,12 @@ namespace PROJECT_SpaceShooter
 
         public void GatlingGun(Hero HERO) 
         {
-            if ((250 <= lifecycle && lifecycle <= 500) || 
-                (750 <= lifecycle && lifecycle <= 1000) || 
-                (1250 <= lifecycle && lifecycle <= 1500) ||
-                (1750 <= lifecycle && lifecycle <= 2000))
+            if(250 == lifecycle || 750 == lifecycle || 1250 == lifecycle || 1750 == lifecycle)
+                Global.soundcontrol.PLaySound("GatlingGun");
+            if ((250 <= lifecycle && lifecycle <= 375) || 
+                (750 <= lifecycle && lifecycle <= 875) || 
+                (1250 <= lifecycle && lifecycle <= 1375) ||
+                (1750 <= lifecycle && lifecycle <= 1875))
             {
                 Random rand = new Random();
                 GameGlobal.FatboizPassProjectiles(this, new FatboizProjectiles(pos, new Vector2(50, 50), false, pos, HERO.pos + new Vector2(rand.Next(-350, 350), rand.Next(-350, 350))));

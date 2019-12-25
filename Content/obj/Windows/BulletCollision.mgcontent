@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Administrator/Desktop/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/BulletCollision.wav</SourceFile>
-  <SourceTime>2019-12-09T21:27:53.5785963+07:00</SourceTime>
-  <DestFile>C:/Users/Administrator/Desktop/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/bin/Windows/BulletCollision.xnb</DestFile>
-  <DestTime>2019-12-12T10:02:18.871035+07:00</DestTime>
+  <SourceFile>C:/Users/Administrator/Desktop/moidoi/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/BulletCollision.wav</SourceFile>
+  <SourceTime>2019-12-24T01:57:18+07:00</SourceTime>
+  <DestFile>C:/Users/Administrator/Desktop/moidoi/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/bin/Windows/BulletCollision.xnb</DestFile>
+  <DestTime>2019-12-24T23:39:45.3150731+07:00</DestTime>
   <Importer>WavImporter</Importer>
   <ImporterTime>2018-12-08T23:35:54+07:00</ImporterTime>
   <Processor>SoundEffectProcessor</Processor>

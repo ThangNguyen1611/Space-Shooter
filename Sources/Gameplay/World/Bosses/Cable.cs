@@ -20,7 +20,7 @@ namespace PROJECT_SpaceShooter
         public float healthmarker;
         public Vector2 fakeheropos;
 
-        public Cable(Vector2 POS) : base("Gunner", POS, new Vector2(500, 500))
+        public Cable(Vector2 POS) : base("Cable", POS, new Vector2(500, 500))
         {
             bossname = "cable";
             speed = 3.5f;
@@ -52,12 +52,15 @@ namespace PROJECT_SpaceShooter
             if (250 == lifecycle || 1000 == lifecycle || 1750 == lifecycle)
             {
                 healthmarker = currenthealth;
+                Global.soundcontrol.PLaySound("ShieldUpSound");
+                
             }
             if ((250 <= lifecycle && lifecycle <= 500) ||
                 (1000 <= lifecycle && lifecycle <= 1250) ||
                 (1750 <= lifecycle && lifecycle <= 2000))
             {
-                color = Color.Yellow;
+                color = Color.Red;
+                myModel = Global.content.Load<Texture2D>("CableImmortal");
                 if (healthmarker > currenthealth)
                 {
                     if (!GameGlobal.triggerinvinsible)
@@ -65,8 +68,13 @@ namespace PROJECT_SpaceShooter
                     healthmarker = currenthealth;
                 }
             }
+            if (500 == lifecycle || 1250 == lifecycle || 2000 == lifecycle)
+            {
+                Global.soundcontrol.PLaySound("ShieldDownSound");
+            }
             else
             {
+                myModel = Global.content.Load<Texture2D>("Cable");
                 color = Color.White;
             }
         }

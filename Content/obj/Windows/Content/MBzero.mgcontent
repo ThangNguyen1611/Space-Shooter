@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Administrator/Desktop/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/MBzero.png</SourceFile>
-  <SourceTime>2019-12-06T20:28:57.5886985+07:00</SourceTime>
-  <DestFile>C:/Users/Administrator/Desktop/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/bin/Windows/Content/MBzero.xnb</DestFile>
-  <DestTime>2019-12-06T20:36:05.2401971+07:00</DestTime>
+  <SourceFile>C:/Users/Administrator/Desktop/moidoi/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/MBzero.png</SourceFile>
+  <SourceTime>2019-12-24T01:57:42+07:00</SourceTime>
+  <DestFile>C:/Users/Administrator/Desktop/moidoi/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/bin/Windows/Content/MBzero.xnb</DestFile>
+  <DestTime>2019-12-24T23:29:24.8341253+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T23:35:54+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

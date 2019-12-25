@@ -20,7 +20,7 @@ namespace PROJECT_SpaceShooter
     {
 
 
-        public FatboizProjectiles(Vector2 POS, Vector2 DIMS, bool ISCRITDMG, Vector2 OWNERPOS, Vector2 TARGET) : base("Fireball", POS, DIMS, ISCRITDMG, OWNERPOS, TARGET)
+        public FatboizProjectiles(Vector2 POS, Vector2 DIMS, bool ISCRITDMG, Vector2 OWNERPOS, Vector2 TARGET) : base("FatboizProjectile", POS, DIMS, ISCRITDMG, OWNERPOS, TARGET)
         {
             speed = 20;
             damage = 35;

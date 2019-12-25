@@ -45,6 +45,9 @@ namespace PROJECT_SpaceShooter
         public void LightBolt(Hero HERO)
         {
             //thêm sound ở đây
+            if (Global.GetDistance(HERO.pos, pos) < 300 && Global.GetDistance(HERO.pos, pos) > 150)
+                Global.soundcontrol.PLaySound("LightBoltSound");
+
             if (Global.GetDistance(HERO.pos, pos) < 300)
             {
                 myModel = Global.content.Load<Texture2D>("RedElector");

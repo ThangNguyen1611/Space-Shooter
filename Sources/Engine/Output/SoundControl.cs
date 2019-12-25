@@ -28,7 +28,7 @@ namespace PROJECT_SpaceShooter
         {
             if(MUSICPATH != "")
             {
-                bgmusic = new Sounds("backgroundmusic", MUSICPATH, 0.1f);
+                bgmusic = new Sounds("backgroundmusic", MUSICPATH, 0.2f);
                 bgmusic.instance.IsLooped = true;
                 bgmusic.instance.Play();
             }

@@ -50,8 +50,21 @@ namespace PROJECT_SpaceShooter
         
         public long timescore;
 
-        public World()
+
+        PassObject ResetWorld;
+        bool checkpause = false;
+        KeyboardState pastKey;
+        cButton btnPause;
+        Basic2d imagePause;
+        Basic2d imageGameOver;
+
+
+        public World(PassObject RESETWORLD)
         {
+            ResetWorld = RESETWORLD;
+
+
+
             offset = new Vector2(0, 0);
 
             Global.gamefont = Global.content.Load<SpriteFont>("FONT");
@@ -82,7 +95,7 @@ namespace PROJECT_SpaceShooter
 
             bosshealthbar = new Bar("BossHP", new Vector2(800, 55));
 
-            scoreimg = new Basic2d("text_score", new Vector2(0, 0), new Vector2(150, 75));
+            scoreimg = new Basic2d("Score", new Vector2(0, 0), new Vector2(150, 75));
 
             spawnPoints.Add(new SpawnPoint("UFO3", new Vector2(100, 100), new Vector2(200, 200)));
 
@@ -99,213 +112,270 @@ namespace PROJECT_SpaceShooter
             lbltrigger = 50;
             
             timescore = 0;
+
+
+
+
+            imagePause = new Basic2d("pause2", new Vector2(Ship.pos.X, Ship.pos.Y), new Vector2(500, 500));
+
+            imageGameOver = new Basic2d("gameover4", new Vector2(Ship.pos.X, Ship.pos.Y), new Vector2(836, 183));
         }
 
         public virtual void Update()
         {
-            bg.Update(offset);
-            Ship.Update(offset);
-            #region Xử lí máu
-            if (Ship.isdead && Ship.currenthealth >= 0)
+            KeyboardState keystate = Keyboard.GetState();
+            if (!Ship.isdead && !checkpause)
             {
-                Ship.GetHit(1f);
-                Ship.UseMana(1f);
+                bg.Update(offset);
+                Ship.Update(offset);
+                #region Xử lí máu
+                if (Ship.isdead && Ship.currenthealth >= 0)
+                {
+                    Ship.GetHit(1f);
+                    Ship.UseMana(1f);
+                }
+                else
+                {
+                    if (Ship.currenthealth <= Ship.maxhealth)
+                        Ship.GetHit(-0.005f);    //0.005f
+                    if (Ship.currentmana <= Ship.maxmana)
+                        Ship.UseMana(-0.25f); //0.25f 
+                }
+                healthbar.Update(Ship.currenthealth, Ship.maxhealth);
+                manabar.Update(Ship.currentmana, Ship.maxmana);
+                if (bosses.Count > 0)
+                    bosshealthbar.Update(bosses[0].currenthealth, bosses[0].maxhealth);
+                #endregion
+                #region Xử lí đạn
+                for (int i = 0; i < projectiles.Count; i++)
+                {
+                    projectiles[i].Update(offset, mobs.ToList<Unit>(), bosses);
+                    if (projectiles[i].HitSomething(mobs.ToList<Unit>(), bosses))
+                    {
+                        Global.soundcontrol.PLaySound("BulletHit");
+                        listBOOM.Add(new EXPLOSIVE(projectiles[i].pos));
+                        explosivetimer.Add(0);
+                    }
+                    if (projectiles[i].done)
+                    {
+                        projectiles.RemoveAt(i);
+                        i--;
+                    }
+                }
+                for (int i = 0; i < gunnerProjectiles.Count; i++)
+                {
+                    gunnerProjectiles[i].Update(offset, Ship);
+                    if (gunnerProjectiles[i].done)
+                    {
+                        gunnerProjectiles.RemoveAt(i);
+                        i--;
+                    }
+                }
+                #endregion
+                #region Xử lí nổ
+                for (int i = 0; i < explosivetimer.Count; i++)
+                {
+                    if (explosivetimer[i] >= 0)
+                        explosivetimer[i]++;
+                    if (explosivetimer[i] > 100)
+                    {
+                        listBOOM.RemoveAt(i);           //Siêu trí tuệ VN ((:
+                        explosivetimer.RemoveAt(i);
+                    }
+                }
+                #endregion
+                #region Xử lí boss
+                if (GameGlobal.gametimepassed % 3000 == 0)
+                {
+                    TimeofBoss();
+                    if (GameGlobal.gametimepassed == 3000)
+                        SpawnFatboiz();
+                    else if (GameGlobal.gametimepassed == 6000)
+                        SpawnBlitz();
+                    else if (GameGlobal.gametimepassed == 500)
+                        SpawnCable();
+                    else
+                    {   //sau khi spawn đủ 3 con thì sẽ spawn ngẫu nhiên
+                        Random rand = new Random();
+                        int whatboss = rand.Next(100);
+                        if (0 <= whatboss && whatboss < 33)
+                            SpawnFatboiz();
+                        if (33 <= whatboss && whatboss < 66)
+                            SpawnBlitz();
+                        if (66 <= whatboss && whatboss < 100)
+                            SpawnCable();
+                    }
+                    if (bosses.Count > 0)
+                    {
+                        if (bosses[0].isappear)
+                        {
+                            bosses[0].Update(offset, Ship);
+                            if (bosses[0].bossname == "fatboiz")
+                            {
+                                for (int i = 0; i < fatboizProjectiles.Count; i++)
+                                {
+                                    fatboizProjectiles[i].Update(offset, Ship);
+                                    if (fatboizProjectiles[i].done)
+                                    {
+                                        fatboizProjectiles.RemoveAt(i);
+                                        i--;
+                                    }
+                                }
+                                if (bosses[0].isdead)
+                                {
+                                    GameGlobal.highscrore += 1000;
+                                    Global.soundcontrol.PLaySound("ShimmerSound");
+                                    for (int i = 0; i < mobs.Count; i++)
+                                    {
+                                        if (mobs[i].typemob == "imp")
+                                            GameGlobal.highscrore += 50;
+                                        if (mobs[i].typemob == "elector")
+                                            GameGlobal.highscrore += 50;
+                                        if (mobs[i].typemob == "gunner")
+                                            GameGlobal.highscrore += 150;
+                                        mobs.RemoveAt(i);
+                                        i--;
+                                    }
+                                    bosses.RemoveAt(0);
+                                    delayspawnboss = 300;
+                                    istimeofboss = false;
+                                }
+                            }
+                            else if (bosses[0].bossname == "blitz")
+                            {
+                                for (int i = 0; i < blitzHands.Count; i++)
+                                {
+                                    blitzHands[i].Update(offset, Ship, bosses);
+                                    BlitzHookEffect(blitzHands[i], Ship, bosses[0]);
+                                    if (blitzHands[i].done)
+                                    {
+                                        blitzHands.RemoveAt(i);
+                                        i--;
+                                    }
+                                }
+                                if (bosses[0].isdead)
+                                {
+                                    GameGlobal.highscrore += 3000;
+                                    Global.soundcontrol.PLaySound("ShimmerSound");
+                                    bosses.RemoveAt(0);
+                                    delayspawnboss = 300;
+                                    istimeofboss = false;
+                                    Ship.isstunned = false;
+                                }
+                            }
+                            else if (bosses[0].bossname == "cable")
+                            {
+                                if (bosses[0].isdead)
+                                {
+                                    GameGlobal.highscrore += 7000;
+                                    Global.soundcontrol.PLaySound("ShimmerSound");
+                                    bosses.RemoveAt(0);
+                                    delayspawnboss = 300;
+                                    istimeofboss = false;
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion
+                if (!istimeofboss)
+                {
+                    #region Xử lí Spawnpoint
+                    for (int i = 0; i < spawnPoints.Count; i++)
+                    {
+                        spawnPoints[i].Update(offset);
+                    }
+                    #endregion
+                    GameGlobal.gametimepassed++;
+                }
+                #region Xử lí mobs
+                for (int i = 0; i < mobs.Count; i++)
+                {
+                    mobs[i].Update(offset, Ship);
+                    if (mobs[i].isdead || mobs[i].iscollision)
+                    {
+                        if (mobs[i].typemob == "imp")
+                            GameGlobal.highscrore += 50;
+                        if (mobs[i].typemob == "elector")
+                            GameGlobal.highscrore += 50;
+                        if (mobs[i].typemob == "gunner")
+                            GameGlobal.highscrore += 150;
+                        mobs.RemoveAt(i);
+                        i--;
+                    }
+                }
+                #endregion
+                #region Xử lí orbs
+                if (!orbspawn)
+                    orbspawntimer--;
+                if (orbspawntimer == 0)
+                {
+                    orbspawn = true;
+                    orbspawntimer = 750;
+                }
+                for (int i = 0; i < orbs.Count; i++)
+                {
+                    orbs[i].Update(Ship);
+                    if (orbs[i].istaken)
+                    {
+                        orbs.RemoveAt(i);
+                        i--;
+                    }
+                }
+                #endregion
+                #region Event orbs
+                TriggerBoostAttackSpeed();
+                TriggerICEWORLD();
+                TriggerInvincible();
+                if (GameGlobal.whattrigger == "")
+                    lbltrigger = 120;
+                #endregion
+                HighScoreUp();
+
+
+                imagePause.Update1(Ship.pos);
+                imageGameOver.Update1(new Vector2(Ship.pos.X - 150, Ship.pos.Y + 30));
             }
             else
             {
-                if (Ship.currenthealth <= Ship.maxhealth)
-                    Ship.GetHit(-0.005f);    //0.005f
-                if (Ship.currentmana <= Ship.maxmana)
-                    Ship.UseMana(-0.25f); //0.25f 
-            }
-            healthbar.Update(Ship.currenthealth, Ship.maxhealth);
-            manabar.Update(Ship.currentmana, Ship.maxmana);
-            if (bosses.Count > 0)
-                bosshealthbar.Update(bosses[0].currenthealth, bosses[0].maxhealth);
-            #endregion
-            #region Xử lí đạn
-            for (int i = 0; i < projectiles.Count; i++)
-            {
-                projectiles[i].Update(offset, mobs.ToList<Unit>(), bosses);
-                if (projectiles[i].HitSomething(mobs.ToList<Unit>(), bosses))
-                {
-                    Global.soundcontrol.PLaySound("BulletHit");
-                    listBOOM.Add(new EXPLOSIVE(projectiles[i].pos));
-                    explosivetimer.Add(0);
-                }
-                if (projectiles[i].done)
-                {
-                    projectiles.RemoveAt(i);
-                    i--;
-                }
-            }
-            for (int i = 0; i < gunnerProjectiles.Count; i++)
-            {
-                gunnerProjectiles[i].Update(offset, Ship);
-                if (gunnerProjectiles[i].done)
-                {
-                    gunnerProjectiles.RemoveAt(i);
-                    i--;
-                }
-            }
-            #endregion
-            #region Xử lí nổ
-            for (int i = 0; i < explosivetimer.Count; i++)
-            {
-                if (explosivetimer[i] >= 0)
-                    explosivetimer[i]++;
-                if (explosivetimer[i] > 100)
-                {
-                    listBOOM.RemoveAt(i);           //Siêu trí tuệ VN ((:
-                    explosivetimer.RemoveAt(i);
-                }
-            }
-            #endregion
-            #region Xử lí boss
-            if (GameGlobal.gametimepassed % 3000 == 0)
-            {
-                TimeofBoss();
-                if (GameGlobal.gametimepassed == 3000)
-                    SpawnFatboiz();
-                else if (GameGlobal.gametimepassed == 6000)
-                    SpawnBlitz();
-                else if (GameGlobal.gametimepassed == 9000)
-                    SpawnCable();
-                else
-                {   //sau khi spawn đủ 3 con thì sẽ spawn ngẫu nhiên
-                    Random rand = new Random();
-                    int whatboss = rand.Next(100);
-                    if (0 <= whatboss && whatboss < 33)
-                        SpawnFatboiz();
-                    if (33 <= whatboss && whatboss < 66)
-                        SpawnBlitz();
-                    if (66 <= whatboss && whatboss < 100)
-                        SpawnCable();
-                }
-                if (bosses.Count > 0)
-                {
-                    if (bosses[0].isappear)
-                    {
-                        bosses[0].Update(offset, Ship);
-                        if (bosses[0].bossname == "fatboiz")
-                        {
-                            for (int i = 0; i < fatboizProjectiles.Count; i++)
-                            {
-                                fatboizProjectiles[i].Update(offset, Ship);
-                                if (fatboizProjectiles[i].done)
-                                {
-                                    fatboizProjectiles.RemoveAt(i);
-                                    i--;
-                                }
-                            }
-                            if (bosses[0].isdead)
-                            {
-                                GameGlobal.highscrore += 1000;
-                                for (int i = 0; i < mobs.Count; i++)
-                                {
-                                    if (mobs[i].typemob == "imp")
-                                        GameGlobal.highscrore += 50;
-                                    if (mobs[i].typemob == "elector")
-                                        GameGlobal.highscrore += 50;
-                                    if (mobs[i].typemob == "gunner")
-                                        GameGlobal.highscrore += 150;
-                                    mobs.RemoveAt(i);
-                                    i--;
-                                }
-                                bosses.RemoveAt(0);
-                                delayspawnboss = 300;
-                                istimeofboss = false;
-                            }
-                        }
-                        else if (bosses[0].bossname == "blitz")
-                        {
-                            for (int i = 0; i < blitzHands.Count; i++)
-                            {
-                                blitzHands[i].Update(offset, Ship, bosses);
-                                BlitzHookEffect(blitzHands[i], Ship, bosses[0]);
-                                if (blitzHands[i].done)
-                                {
-                                    blitzHands.RemoveAt(i);
-                                    i--;
-                                }
-                            }
-                            if (bosses[0].isdead)
-                            {
-                                GameGlobal.highscrore += 3000;
-                                bosses.RemoveAt(0);
-                                delayspawnboss = 300;
-                                istimeofboss = false;
-                            }
-                        }
-                        else if (bosses[0].bossname == "cable")
-                        {
-                            if (bosses[0].isdead)
-                            {
-                                GameGlobal.highscrore += 7000;
-                                bosses.RemoveAt(0);
-                                delayspawnboss = 300;
-                                istimeofboss = false;
-                            }
-                        }
 
-                    }
+                if (keystate.IsKeyDown(Keys.R))
+                {
+                    GameGlobal.highscrore = 0;
+                    GameGlobal.gametimepassed = 1;
 
+                    GameGlobal.whattrigger = "";
+
+                    GameGlobal.triggerhealing = false;
+                    GameGlobal.triggerextrahealth = false;
+                    GameGlobal.extradamage = 0;
+                    GameGlobal.triggerextracrit = false;
+                    GameGlobal.triggerextralife = false;
+                    GameGlobal.triggerICEWORLD = false;
+                    GameGlobal.triggerinvinsible = false;
+                    GameGlobal.invincibletimer = 300;
+                    GameGlobal.triggerboostatkspeed = false;
+                    GameGlobal.boostatkspeedtimer = 1000;
+                    GameGlobal.obtainnuclearbomb = false;
+                    ResetWorld(null);
                 }
+
+
             }
-            #endregion
-            if (!istimeofboss)
+
+            if (Keyboard.GetState().IsKeyDown(Keys.P) && pastKey.IsKeyUp(Keys.P))
             {
-                #region Xử lí Spawnpoint
-                for (int i = 0; i < spawnPoints.Count; i++)
-                {
-                    spawnPoints[i].Update(offset);
-                }
-                #endregion
-                GameGlobal.gametimepassed++;
+                checkpause = !checkpause;
+
             }
-            #region Xử lí mobs
-            for (int i = 0; i < mobs.Count; i++)
-            {
-                mobs[i].Update(offset, Ship);
-                if (mobs[i].isdead || mobs[i].iscollision)
-                {
-                    if (mobs[i].typemob == "imp")
-                        GameGlobal.highscrore += 50;
-                    if (mobs[i].typemob == "elector")
-                        GameGlobal.highscrore += 50;
-                    if (mobs[i].typemob == "gunner")
-                        GameGlobal.highscrore += 150;
-                    mobs.RemoveAt(i);
-                    i--;
-                }
-            }
-            #endregion
-            #region Xử lí orbs
-            if (!orbspawn)
-                orbspawntimer--;
-            if(orbspawntimer == 0)
-            {
-                orbspawn = true;
-                orbspawntimer = 750;
-            }
-            for (int i = 0; i < orbs.Count; i++) 
-            {
-                orbs[i].Update(Ship);
-                if (orbs[i].istaken)
-                {
-                    orbs.RemoveAt(i);
-                    i--;
-                }
-            }
-            #endregion
-            #region Event orbs
-            TriggerBoostAttackSpeed();
-            TriggerICEWORLD();
-            TriggerInvincible();
-            if (GameGlobal.whattrigger == "")
-                lbltrigger = 120;
-            #endregion
-            HighScoreUp();
+            pastKey = Keyboard.GetState();
+
+
+
+
+
+
+           
         }
 
         public virtual void AddMob(object INFO)
@@ -370,6 +440,7 @@ namespace PROJECT_SpaceShooter
         {
             if (delayspawnboss == 0)
             {
+                Global.soundcontrol.PLaySound("FatboizScreamSound");
                 Random rand = new Random();
                 bosses.Add(new Fatboiz(new Vector2(rand.Next(1500, 2500), rand.Next(1500, 2500))));
                 bosses[0].isappear = true;
@@ -381,6 +452,7 @@ namespace PROJECT_SpaceShooter
         {
             if (delayspawnboss == 0)
             {
+                Global.soundcontrol.PLaySound("BlitzScreamSound");
                 Random rand = new Random();
                 bosses.Add(new Blitz(new Vector2(rand.Next(1500, 2500), rand.Next(1500, 2500))));
                 bosses[0].isappear = true;
@@ -392,6 +464,7 @@ namespace PROJECT_SpaceShooter
         {
             if (delayspawnboss == 0)
             {
+                Global.soundcontrol.PLaySound("CableScreamSound");
                 Random rand = new Random();
                 bosses.Add(new Cable(new Vector2(rand.Next(1500, 2500), rand.Next(1500, 2500))));
                 bosses[0].isappear = true;
@@ -408,13 +481,12 @@ namespace PROJECT_SpaceShooter
             {
                 if (fatboizProjectiles.Count() < 1000)
                 {
-                    Global.soundcontrol.PLaySound("Shooting");
                     fatboizProjectiles.Add((FatboizProjectiles)PROJECTILE);
                 }
             }
             if (fatboiz.bulletdelay == 0)
             {
-                fatboiz.bulletdelay = 11;
+                fatboiz.bulletdelay = 10;
             }
         }
 
@@ -432,7 +504,7 @@ namespace PROJECT_SpaceShooter
                 }
                 if (fatboiz.sodiersspawndelay == 0)
                 {
-                    fatboiz.sodiersspawndelay = 15;
+                    fatboiz.sodiersspawndelay = 25;
                 }
             }
         }
@@ -446,7 +518,7 @@ namespace PROJECT_SpaceShooter
             {
                 if (blitzHands.Count() < 1000)
                 {
-                    Global.soundcontrol.PLaySound("Shooting");
+                    Global.soundcontrol.PLaySound("BlitzHook");
                     blitzHands.Add((BlitzHands)PROJECTILE);
                 }
             }
@@ -553,7 +625,7 @@ namespace PROJECT_SpaceShooter
             if (GameGlobal.triggerboostatkspeed)
             {
                 GameGlobal.boostatkspeedtimer--;
-                Ship.color = Color.Yellow;
+                Ship.color = Color.PaleVioletRed;
                 if(GameGlobal.boostatkspeedtimer == 0)
                 {
                     GameGlobal.boostatkspeedtimer = 1500;
@@ -583,7 +655,7 @@ namespace PROJECT_SpaceShooter
         {
             if (GameGlobal.obtainnuclearbomb)
             {
-                Global.soundcontrol.PLaySound("BulletHit");
+                Global.soundcontrol.PLaySound("NuclearBombSound");
                 for(int i = 0; i < mobs.Count; i++)
                 {
                     if (mobs[i].typemob == "imp")
@@ -618,7 +690,10 @@ namespace PROJECT_SpaceShooter
         {
             bg.Draw();
             Ship.Draw(offset);
-           
+
+            if (delayspawnboss == 299)
+                Global.soundcontrol.PLaySound("BossWarningSound");
+
             if (delayspawnboss <= 299 && delayspawnboss >= 10)
                 Global.spriteBatch.DrawString(Global.gamefont, "            WARNING     \n Get Out Of The Center" , new Vector2(Ship.pos.X - 250, Ship.pos.Y - 250), Color.Red, 0, new Vector2(0, 0), 3.2f, new SpriteEffects(), 0);
             
@@ -694,7 +769,7 @@ namespace PROJECT_SpaceShooter
             scoreimg.Draw(new Vector2(Ship.pos.X + 450, Ship.pos.Y - 300));
             Global.spriteBatch.DrawString(Global.gamefont, GameGlobal.highscrore.ToString(), new Vector2(Ship.pos.X + 535, Ship.pos.Y - 325), Color.CadetBlue, 0, new Vector2(0, 0), 4, new SpriteEffects(), 0);
             Global.spriteBatch.DrawString(Global.gamefont, ((int)Ship.currenthealth).ToString() + "/" + Ship.maxhealth.ToString(), new Vector2(Ship.pos.X , Ship.pos.Y - 337), Color.CadetBlue, 0, new Vector2(0, 0), 2, new SpriteEffects(), 0);
-            Global.spriteBatch.DrawString(Global.gamefont, "GameTime: " + GameGlobal.gametimepassed.ToString(), new Vector2(Ship.pos.X + 550, Ship.pos.Y - 250), Color.CadetBlue);
+            //Global.spriteBatch.DrawString(Global.gamefont, "GameTime: " + GameGlobal.gametimepassed.ToString(), new Vector2(Ship.pos.X + 550, Ship.pos.Y - 250), Color.CadetBlue);
 
             Global.spriteBatch.DrawString(Global.gamefont, "Speed: " + Ship.speed.ToString(), new Vector2(Ship.pos.X - 620, Ship.pos.Y - 235), Color.CadetBlue);
             Global.spriteBatch.DrawString(Global.gamefont, "Attack: " + Ship.UnrealAttack.ToString(), new Vector2(Ship.pos.X - 620, Ship.pos.Y - 215), Color.CadetBlue);
@@ -707,6 +782,19 @@ namespace PROJECT_SpaceShooter
             }
             if (lbltrigger == 0)
                 GameGlobal.whattrigger = "";
+
+
+
+            if (Ship.isdead)
+            {
+                imageGameOver.Draw();
+                Global.spriteBatch.DrawString(Global.gamefont, "                         \n PRESS R TO PLAY AGAIN  \n            ESC TO EXIT", new Vector2(Ship.pos.X - 250, Ship.pos.Y), Color.Red, 0, new Vector2(0, 0), 3.2f, new SpriteEffects(), 0);
+            }
+
+            if (checkpause && !Ship.isdead)
+            {
+                imagePause.Draw();
+            }
         }
     }
 }

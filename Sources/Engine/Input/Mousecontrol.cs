@@ -107,15 +107,15 @@ namespace PROJECT_SpaceShooter
             return tempVec;
         }
 
-        //public virtual bool LeftClick()
-        //{
-        //    if (newMouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && oldMouse.LeftButton != Microsoft.Xna.Framework.Input.ButtonState.Pressed && newMouse.Position.X >= 0 && newMouse.Position.X <= Globals.screenWidth && newMouse.Position.Y >= 0 && newMouse.Position.Y <= Globals.screenHeight)
-        //    {
-        //        return true;
-        //    }
+        public virtual bool LeftClick()
+        {
+            if (newMouse.LeftButton == Microsoft.Xna.Framework.Input.ButtonState.Pressed && oldMouse.LeftButton != Microsoft.Xna.Framework.Input.ButtonState.Pressed && newMouse.Position.X >= 0 && newMouse.Position.X <= Global.screenwidth && newMouse.Position.Y >= 0 && newMouse.Position.Y <= Global.screenheight)
+            {
+                return true;
+            }
 
-        //    return false;
-        //}
+            return false;
+        }
 
         //public virtual bool LeftClickHold()
         //{
@@ -191,7 +191,7 @@ namespace PROJECT_SpaceShooter
         //{
 
         //}
-       
+
     }
 
     

@@ -42,7 +42,7 @@ namespace PROJECT_SpaceShooter
             rot = Global.RotateTowards(pos, HERO.pos);
             if (Global.GetDistance(HERO.pos, pos) < HERO.hitdist)
             {
-                Global.soundcontrol.PLaySound("HitImp");
+                Global.soundcontrol.PLaySound("MobHit");
                 iscollision = true;
                 if(candamage)
                     HERO.GetHit(mobdmg);

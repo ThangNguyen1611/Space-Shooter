@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Administrator/Desktop/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/crosshair_red_large.png</SourceFile>
-  <SourceTime>2015-07-09T19:27:36.7579729+07:00</SourceTime>
-  <DestFile>C:/Users/Administrator/Desktop/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/bin/Windows/crosshair_red_large.xnb</DestFile>
-  <DestTime>2019-12-12T10:02:18.9335417+07:00</DestTime>
+  <SourceFile>C:/Users/Administrator/Desktop/moidoi/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/crosshair_red_large.png</SourceFile>
+  <SourceTime>2019-12-24T01:57:24+07:00</SourceTime>
+  <DestFile>C:/Users/Administrator/Desktop/moidoi/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/bin/Windows/crosshair_red_large.xnb</DestFile>
+  <DestTime>2019-12-24T23:39:45.6885959+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T23:35:54+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

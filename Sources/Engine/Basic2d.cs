@@ -33,6 +33,16 @@ namespace PROJECT_SpaceShooter
             myModel = Global.content.Load<Texture2D>(PATH);
         }
 
+        public virtual void Update1(Vector2 a)
+        {
+            pos.X = a.X - 230;
+            pos.Y = a.Y - 200;
+        }
+
+
+
+
+
         public virtual void Update(Vector2 OFFSET)
         {
 

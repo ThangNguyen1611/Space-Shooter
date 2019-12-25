@@ -24,7 +24,7 @@ namespace PROJECT_SpaceShooter
 
         public bool ishit;
 
-        public BlitzHands(Vector2 POS, Vector2 DIMS, bool ISCRITDMG, Vector2 OWNERPOS, Vector2 TARGET) : base("Fireball", POS, DIMS, ISCRITDMG, OWNERPOS, TARGET)
+        public BlitzHands(Vector2 POS, Vector2 DIMS, bool ISCRITDMG, Vector2 OWNERPOS, Vector2 TARGET) : base("BlitzHands", POS, DIMS, ISCRITDMG, OWNERPOS, TARGET)
         {
             speed = 20;
             damage = 0;

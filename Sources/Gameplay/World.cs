@@ -359,23 +359,14 @@ namespace PROJECT_SpaceShooter
                     GameGlobal.obtainnuclearbomb = false;
                     ResetWorld(null);
                 }
-
-
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.P) && pastKey.IsKeyUp(Keys.P))
             {
                 checkpause = !checkpause;
-
             }
             pastKey = Keyboard.GetState();
-
-
-
-
-
-
-
+            
         }
 
         public virtual void AddMob(object INFO)

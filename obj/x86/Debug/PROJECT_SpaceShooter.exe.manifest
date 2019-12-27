@@ -50,7 +50,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>6yAPDOUmRaZhPp+2H5abppH0NKBwW016tMOnFymwJNc=</dsig:DigestValue>
+        <dsig:DigestValue>2EfoNx9tp0QhHMZItbk/ElbZkcytpa2i7TonvO2DdTI=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -201,13 +201,13 @@
       <dsig:DigestValue>4GoMNDbRGo/qHs56apfnqInWWJUFpc6W5E+kqdNfQ0Q=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Content\Blitz.xnb" size="1571301">
+  <file name="Content\Blitz.xnb" size="1542213">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>YcGBp4tW16DchW85WYQghFAMl0g9hNUYHkMXOV8fFDA=</dsig:DigestValue>
+      <dsig:DigestValue>zq7FmJVd7nW8MxAvUomZphX/i/yLKXzKjaJQONT7qQs=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Content\BlitzHands.xnb" size="1741961">

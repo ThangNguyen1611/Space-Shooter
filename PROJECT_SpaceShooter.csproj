@@ -73,7 +73,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="cButton.cs" />
-    <Compile Include="GameGlobal.cs" />
+    <Compile Include="Sources\Gameplay\GameGlobal.cs" />
     <Compile Include="GamePlay.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

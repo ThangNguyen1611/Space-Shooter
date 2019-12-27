@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>C:/Users/Administrator/Desktop/moidoi/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/gioithieu.png</SourceFile>
+  <SourceFile>C:/Users/Administrator/Documents/GitHub/DOAN/Content/gioithieu.png</SourceFile>
   <SourceTime>2019-12-23T16:15:28.6897682+07:00</SourceTime>
-  <DestFile>C:/Users/Administrator/Desktop/moidoi/PROJECT_SpaceShooter/PROJECT_SpaceShooter/Content/bin/Windows/Content/gioithieu.xnb</DestFile>
-  <DestTime>2019-12-24T23:29:30.0686011+07:00</DestTime>
+  <DestFile>C:/Users/Administrator/Documents/GitHub/DOAN/Content/bin/Windows/Content/gioithieu.xnb</DestFile>
+  <DestTime>2019-12-26T09:03:33.4231389+07:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2018-12-08T23:35:54+07:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

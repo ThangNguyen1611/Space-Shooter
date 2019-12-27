@@ -89,12 +89,10 @@ namespace PROJECT_SpaceShooter
 
             Global.content = this.Content;
 
-
             Global.spriteBatch = new SpriteBatch(GraphicsDevice);
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             Global.mouse = new Mousecontrol();
-
 
             IsMouseVisible = true;
             btnExit = new cButton(Content.Load<Texture2D>("quit4"), graphics.GraphicsDevice);
@@ -107,16 +105,7 @@ namespace PROJECT_SpaceShooter
             btnExit.setPosition(new Vector2(250, 400));
             btnAboutexit.setPosition(new Vector2(550, 550));
 
-
             gameplay = new GamePlay();
-
-
-
-
-            //danhthem
-
-
-
 
             //Global.soundcontrol = new SoundControl("");
             Global.soundcontrol = new SoundControl("BreaktheSwordofJustice");
@@ -146,13 +135,8 @@ namespace PROJECT_SpaceShooter
 
             Global.soundcontrol.bgmusic.instance.Stop();
 
-
-
-
             video = Content.Load<Video>("Intro");
             videoPlayer = new VideoPlayer();
-
-
         }
 
 
